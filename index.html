@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Snake</title>
+	</head>
+	<body>
+		<canvas id="snakegame" width="600" height="480"> </canvas>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/imgs.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="js/snake.js" ></script>
+		<script>	
+			$(function(){
+				var game =new SnakeGame();
+				bgImg.onload = function(){
+					game.init();
+				}
+			});
+		</script>
+	</body>
+</html>
