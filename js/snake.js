@@ -25,7 +25,26 @@ function SnakeGame() {
 	}
 	//2.2-画蛇
 	this.drawSnake = function() { 
-
+		//生成5个节点的蛇身数据（此时，图片全部是bodyImg）
+		for(var i=0;i<5;i++){
+			this.snakeBodyList[i] = {
+				x:this.stepX/2-2+i,//保证第三个节点的位置在屏幕中心
+				y:this.stepY/2,
+				img:bodyImg,
+				direct:'west' 
+			}
+			this.snakeBodyList[0].img = westImg;//修改蛇头，图片更改为westImg
+		}
+		//根据数组数据，在canvas中画蛇
+		for(var j=0;j<this.snakeBodyList.length;j++){
+			var snake = this.snakeBodyList[j];
+			this.canvas.drawImage(
+				snake.img,
+				snake.x*this.step,
+				snake.y*this.step,
+				this.step,
+				this.step);
+		}
 		 
 	}
 	//2.3画食物
