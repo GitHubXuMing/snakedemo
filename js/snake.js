@@ -109,20 +109,28 @@ function SnakeGame() {
 			//根据操作，改变蛇snake自己的属性值
 			switch(keyCode){
 				case 37://LEFT
-					snake.snakeBodyList[0].img = westImg;
-					snake.snakeBodyList[0].direct = 'west';
+					if(snake.snakeBodyList[0].direct != 'east'){
+						snake.snakeBodyList[0].img = westImg;
+						snake.snakeBodyList[0].direct = 'west';
+					}
 					break;
 				case 38://UP
-					snake.snakeBodyList[0].img = northImg;
-					snake.snakeBodyList[0].direct = 'north';
+					if(snake.snakeBodyList[0].direct != 'south'){
+						snake.snakeBodyList[0].img = northImg;
+						snake.snakeBodyList[0].direct = 'north';
+					}
 					break;
 				case 39://RIGHT
-					snake.snakeBodyList[0].img = eastImg;
-					snake.snakeBodyList[0].direct = 'east';
+					if(snake.snakeBodyList[0].direct != 'west'){
+						snake.snakeBodyList[0].img = eastImg;
+						snake.snakeBodyList[0].direct = 'east';
+					}
 					break;
 				case 40://DOWN
-					snake.snakeBodyList[0].img = southImg;
-					snake.snakeBodyList[0].direct = 'south';
+					if(snake.snakeBodyList[0].direct != 'north'){
+						snake.snakeBodyList[0].img = southImg;
+						snake.snakeBodyList[0].direct = 'south';
+					}
 					break;
 			}
 		}
