@@ -17,7 +17,6 @@ function SnakeGame() {
 	//蛇移动时，需要定义一个定时器Timer,可以在游戏结束的时候关闭
 	this.timer = null;
 	
-	
 	//1-实现游戏界面
 	this.init = function() { 
 		this.draw();
@@ -158,7 +157,31 @@ function SnakeGame() {
 			}
 			//对整个游戏界面进行重绘
 			snake.draw();
+			//判断游戏是否结束
+			var gameOverFlag = snake.isGameOver();
+			if(gameOverFlag){
+				snake.stopTimer();
+				if(confirm('your score:????\nagain?')){
+					//清空蛇身数组，恢复初始状态
+					snake.snakeBodyList = new Array();
+					//重绘
+					snake.init();
+				}
+			}
 		},200);
+	}
+	//4-游戏结束
+	//4.1 清除定时器
+	this.stopTimer = function(){
+		clearInterval(this.timer);
+	}
+	//4.2 判断游戏是否结束
+	this.isGameOver = function(){
+		var sHead = this.snakeBodyList[0];
+		if(sHead.x > this.stepX-1||sHead.x < 0||sHead.y>this.stepY-1|| sHead.y < 0){
+			return true;
+		}
+		return false;
 	}
 }
 
