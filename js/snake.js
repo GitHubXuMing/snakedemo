@@ -16,9 +16,11 @@ function SnakeGame() {
 	}
 	//蛇移动时，需要定义一个定时器Timer,可以在游戏结束的时候关闭
 	this.timer = null;
-	
+	//定义分值
+	this.score = 0;
 	//1-实现游戏界面
 	this.init = function() { 
+		this.score = 0;
 		this.draw();
 		this.move();
 	} 
@@ -98,7 +100,12 @@ function SnakeGame() {
 		}
 	}
 	//3-蛇移动
-	this.move = function() {
+	//3.1判断运行设备是PC端还是移动端,如果是PC端，返回true
+	this.isPCDevice = function(){
+		return true;
+	}
+	//3.2响应PC端键盘事件
+	this.pcHandle = function(){
 		//技巧：把SnakeGame的this赋值给一个变量，该变量可以被事件方法使用
 		var snake = this;
 		//启动事件时，用的this指代的是事件源对象，即document
@@ -133,7 +140,19 @@ function SnakeGame() {
 					break;
 			}
 		}
+	}
+	//3.3相应手机键盘触屏事件
+	this.phoneHandle = function(){}
+	//3.4实现蛇移动
+	this.move = function() {
+		//根据设备，决定响应的事件
+		if(this.isPCDevice()){
+			this.pcHandle();
+		}else{
+			this.phoneHandle();
+		}
 		//根据蛇最新的属性值，进行动画绘制（定时器）
+		var snake = this;
 		this.timer = setInterval(function(){
 			//首先，蛇身体每一个节点获得前一个节点的位置
 			for(var i=snake.snakeBodyList.length-1;i>0;i--){
@@ -155,13 +174,15 @@ function SnakeGame() {
 					snake.snakeBodyList[0].y++;
 					break;
 			}
+			//判断是否吃到了食物
+			snake.eatFood();
 			//对整个游戏界面进行重绘
 			snake.draw();
 			//判断游戏是否结束
 			var gameOverFlag = snake.isGameOver();
 			if(gameOverFlag){
 				snake.stopTimer();
-				if(confirm('your score:????\nagain?')){
+				if(confirm('Your score is :'+snake.score+'\n Try Again?')){
 					//清空蛇身数组，恢复初始状态
 					snake.snakeBodyList = new Array();
 					//重绘
@@ -178,10 +199,36 @@ function SnakeGame() {
 	//4.2 判断游戏是否结束
 	this.isGameOver = function(){
 		var sHead = this.snakeBodyList[0];
+		//撞墙死
 		if(sHead.x > this.stepX-1||sHead.x < 0||sHead.y>this.stepY-1|| sHead.y < 0){
 			return true;
 		}
+		//撞自己死
+		for(var i=1;i<this.snakeBodyList.length;i++){
+			if(sHead.x == this.snakeBodyList[i].x && sHead.y == this.snakeBodyList[i].y){
+				return true;
+			}
+		}
 		return false;
+	}
+	
+	//5-蛇吃食物，计分
+	this.eatFood = function(){
+		//实现逻辑，如果蛇头与食物的坐标重合，食物消失，在随机点重新出现，蛇身+1
+		var shead = this.snakeBodyList[0];
+		if(shead.x == this.food.x && shead.y == this.food.y){
+			this.food.exist = false;
+			//思路：追加一个新节点，坐标（-10，-10），当运行move方法时，最后一个节点将获得倒数第二个节点的值，draw方法被调用，
+			var length = this.snakeBodyList.length;
+			this.snakeBodyList[length] = {
+				x:-10,
+				y:-10,
+				img:bodyImg,
+				direct:this.snakeBodyList[length-1].direct
+			};
+			//加分
+			this.score += 10;
+		}
 	}
 }
 
