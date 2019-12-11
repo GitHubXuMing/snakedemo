@@ -1,5 +1,6 @@
 function SnakeGame() {
-	this.canvas = document.querySelector("#snakegame").getContext("2d");
+	this.cav = document.querySelector("#snakegame");
+	this.canvas = this.cav.getContext("2d");
 	this.width = 600;//画布初始宽度
 	this.height = 480;//画布初始高度
 	this.step = 20;//步长
@@ -21,14 +22,16 @@ function SnakeGame() {
 	//1-实现游戏界面
 	this.init = function() { 
 		this.score = 0;
+		//根据设备，重置画布的宽度和高度
+		this.isPCDevice();	
 		this.draw();
 		this.move();
 	} 
 	
 	//2-画背景，画蛇，画食物
-	this.draw = function() { 
-		//2.1画背景		
-		this.canvas.drawImage(bgImg, 0, 0, 600, 480);
+	this.draw = function() { 	
+		//2.1画背景
+		this.canvas.drawImage(bgImg, 0, 0, this.width, this.height);
 		//2.2画蛇 
 		this.drawSnake();
 		//2.3画食物
@@ -102,7 +105,18 @@ function SnakeGame() {
 	//3-蛇移动
 	//3.1判断运行设备是PC端还是移动端,如果是PC端，返回true
 	this.isPCDevice = function(){
-		return true;
+		var info = window.navigator.userAgent;
+		var flag = info.indexOf("Windows") != -1?true:false;
+		//如果是手机屏幕，全屏显示
+		if(!flag){
+			this.cav.width = window.innerWidth;//画布宽度设置
+			this.cav.height = window.innerHeight;//画布高度设置
+			this.width = parseInt(window.innerWidth);//画布初始宽度
+			this.height = parseInt(window.innerHeight);//画布初始高度
+			this.stepX = parseInt(this.width/this.step);//栅格X
+			this.stepY = parseInt(this.height/this.step);//栅格Y
+		}
+		return flag;
 	}
 	//3.2响应PC端键盘事件
 	this.pcHandle = function(){
