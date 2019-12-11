@@ -43,8 +43,8 @@ function SnakeGame() {
 		if(this.snakeBodyList.length<1){
 			for(var i=0;i<5;i++){
 				this.snakeBodyList[i] = {
-					x:this.stepX/2-2+i,//保证第三个节点的位置在屏幕中心
-					y:this.stepY/2,
+					x:parseInt(this.stepX/2-2+i),//保证第三个节点的位置在屏幕中心
+					y:parseInt(this.stepY/2),
 					img:bodyImg,
 					direct:'west' 
 				}
@@ -79,8 +79,8 @@ function SnakeGame() {
 			return;
 		}
 		//生成随机位置
-		this.food.x = Math.floor(Math.random()*this.stepX);
-		this.food.y = Math.floor(Math.random()*this.stepY);
+		this.food.x = parseInt(Math.floor(Math.random()*this.stepX));
+		this.food.y = parseInt(Math.floor(Math.random()*this.stepY));
 		//判断是否与蛇身重叠，如果true，重新运行drawFood方法，否则，在新位置画蛇
 		var flag = false;
 		for(var i in this.snakeBodyList){
@@ -156,7 +156,35 @@ function SnakeGame() {
 		}
 	}
 	//3.3相应手机键盘触屏事件
-	this.phoneHandle = function(){}
+	this.phoneHandle = function(){
+		var snake = this;
+		document.addEventListener('touchstart',function(ev){
+			ev = ev||window.event;
+			//获得触屏的X,Y坐标
+			var touchX = parseInt(ev.changedTouches[0].clientX);
+			var touchY = parseInt(ev.changedTouches[0].clientY);
+			//根据蛇头的方向，决定移动方向
+			var shead = snake.snakeBodyList[0];
+			if(shead.direct=='north' || shead.direct == 'south'){
+				if(touchX < shead.x*snake.step){
+					shead.img = westImg;
+					shead.direct='west';
+				}else{
+					shead.img = eastImg;
+					shead.direct='east';					
+				}
+			}else{//蛇头是west或者east方向
+				if(touchY < shead.y*snake.step){
+					shead.img = northImg;
+					shead.direct='north';
+				}else{
+					shead.img = southImg;
+					shead.direct='south';					
+				}
+			}
+			
+		});		
+	}
 	//3.4实现蛇移动
 	this.move = function() {
 		//根据设备，决定响应的事件
